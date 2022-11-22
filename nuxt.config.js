@@ -7,15 +7,23 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'marshmallow-cooker',
+    title: 'マシュマロクッカー',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ja'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { hid: 'description', name: 'description', content: 'マシュマロの枠の色を変えるためのツールです。' },
+      { name: 'format-detection', content: 'telephone=no' },
+
+      { hid: 'og:site_name', property: 'og:site_name', content: 'マシュマロクッカー' },
+      { hid: 'og:type', property: 'og:type', content: 'website' },
+      { hid: 'og:url', property: 'og:url', content: 'https://marshmallow-cooker.web.app/' },
+      { hid: 'og:title', property: 'og:title', content: 'マシュマロクッカー' },
+      { hid: 'og:description', property: 'og:description', content: 'マシュマロの枠の色を変えるためのツールです。' },
+      { hid: 'og:image', property: 'og:image', content: 'https://marshmallow-cooker.web.app/ogp.png' },
+      { name: 'twitter:card', content: 'summary' }//　twitterの画像サイズ
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -28,6 +36,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/Konva.js',
+    '~/plugins/Verte.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -71,5 +81,15 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    extend: ({ module, output }) => {
+      // rulesの先頭に追加
+      module.rules.unshift({
+        test: /\.worker\.js$/,
+        loader: 'worker-loader'
+      });
+
+      // HMR時にWebWorkerでwindow is not definedになる問題対策
+      output.globalObject = 'this';
+    }
   }
 }
